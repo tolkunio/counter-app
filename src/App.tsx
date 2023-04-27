@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {SuperButton} from './components/SuperButton/SuperButton';
 
@@ -6,6 +6,17 @@ function App() {
     const maxCounterValue = 5;
     const minCounterValue = 0;
     const [counter, setCounter] = useState(minCounterValue);
+    useEffect(()=>{
+        localStorage.setItem('counterValue',JSON.stringify(counter));
+    },[counter]);
+
+    useEffect(()=>{
+        let counterValue = localStorage.getItem('counterValue');
+        if(counterValue){
+            let value = JSON.parse(counterValue);
+            setCounter(value);
+        }
+    },[])
     const increaseCounterHandler = () => {
         setCounter((prev)=>prev+1);
     }
@@ -19,7 +30,6 @@ function App() {
             <span className={resultSpanClass}>
                 {counter}
             </span>
-                0
                 <div>
                     <SuperButton
                                  disabled={counter >= maxCounterValue}
@@ -30,6 +40,9 @@ function App() {
                                  onClick={resetCounterHandler}>
                         reset
                     </SuperButton>
+                </div>
+                <div>
+
                 </div>
             </div>
         </div>
