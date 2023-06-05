@@ -1,50 +1,53 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import {SuperButton} from './components/SuperButton/SuperButton';
+import Counter from './components/Counter/Counter';
+
+export type CounterRulesType = {
+    startValue: number,
+    maxValue: number
+};
+
+let startRules: CounterRulesType = {
+    startValue: 0,
+    maxValue: 5,
+}
 
 function App() {
-    const maxCounterValue = 5;
-    const minCounterValue = 0;
-    const [counter, setCounter] = useState(minCounterValue);
-    useEffect(()=>{
-        localStorage.setItem('counterValue',JSON.stringify(counter));
-    },[counter]);
+    let [counter, setCounter] = useState<number>(startRules.startValue);
+    let [err, setError] = useState<boolean>(false);
 
-    useEffect(()=>{
+
+    //get from localStorage
+    useEffect(() => {
         let counterValue = localStorage.getItem('counterValue');
-        if(counterValue){
+        if (counterValue) {
             let value = JSON.parse(counterValue);
             setCounter(value);
         }
-    },[])
-    const increaseCounterHandler = () => {
-        setCounter((prev)=>prev+1);
+    }, [])
+
+    //set to localStorage
+    useEffect(() => {
+        localStorage.setItem('counterValue', JSON.stringify(counter))
+    }, [counter]);
+
+    const incrementCounter = () => {
+        setCounter((prev) => prev + 1);
     }
-    const resetCounterHandler = () => {
-        setCounter(minCounterValue);
+    const resetCounter = () => {
+        setCounter(startRules.startValue);
     }
-    const resultSpanClass = `${counter === maxCounterValue ? 'redSpan' : 'span'}`;
+    const setErrorHandler = (err: boolean) => {
+        setError(err);
+    }
     return (
         <div className="App">
-            <div className="counter">
-            <span className={resultSpanClass}>
-                {counter}
-            </span>
-                <div>
-                    <SuperButton
-                                 disabled={counter >= maxCounterValue}
-                                 onClick={increaseCounterHandler}>
-                    inc
-                    </SuperButton>
-                    <SuperButton disabled={counter === minCounterValue}
-                                 onClick={resetCounterHandler}>
-                        reset
-                    </SuperButton>
-                </div>
-                <div>
-
-                </div>
-            </div>
+            <Counter counterRules={startRules}
+                     counterValue={counter}
+                     error={err}
+                     incrementCallback={incrementCounter}
+                     resetCallback={resetCounter}/>
         </div>
     );
 }
