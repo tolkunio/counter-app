@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './App.css';
 import {SuperButton} from './components/SuperButton/SuperButton';
 import Counter from './components/Counter/Counter';
+import CounterSettings from './components/CounterSettings/CounterSettings';
 
 export type CounterRulesType = {
     startValue: number,
@@ -43,11 +44,20 @@ function App() {
     }
     return (
         <div className="App">
-            <Counter counterRules={startRules}
-                     counterValue={counter}
-                     error={err}
-                     incrementCallback={incrementCounter}
-                     resetCallback={resetCounter}/>
+            <div className="appWrapper">
+                <Counter counterRules={startRules}
+                         counterValue={counter}
+                         error={err}
+                         incrementCallback={incrementCounter}
+                         resetCallback={resetCounter}/>
+                <CounterSettings counterRules={startRules}
+                                 error={err}
+                                 setErrorCallback={() => {
+                                 }}
+                                 setRulesCallback={() => {
+                                 }}/>
+            </div>
+
         </div>
     );
 }
