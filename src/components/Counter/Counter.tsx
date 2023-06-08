@@ -8,7 +8,7 @@ type CounterPropsType = {
     counterValue: number,
     error:boolean,
     incrementCallback:()=>void,
-    resetCallback:()=>void
+    resetCallback:(start?: number)=>void
 }
 
 const Counter = (props:CounterPropsType) => {
@@ -19,7 +19,7 @@ const Counter = (props:CounterPropsType) => {
     return (
         <div className={s.counter}>
              <span className={resultSpanClass}>
-                {props.counterValue}
+                {counter}
             </span>
             <div>
                 <SuperButton
@@ -27,8 +27,8 @@ const Counter = (props:CounterPropsType) => {
                     onClick={props.incrementCallback}>
                     inc
                 </SuperButton>
-                <SuperButton disabled={props.counterValue === minCounterValue}
-                             onClick={props.resetCallback}>
+                <SuperButton disabled={counter === minCounterValue}
+                             onClick={()=>props.resetCallback()}>
                     reset
                 </SuperButton>
             </div>

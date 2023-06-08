@@ -16,6 +16,7 @@ let startRules: CounterRulesType = {
 
 function App() {
     let [counter, setCounter] = useState<number>(startRules.startValue);
+    let [rules, setRules]= useState<CounterRulesType>(startRules);
     let [err, setError] = useState<boolean>(false);
 
 
@@ -26,36 +27,43 @@ function App() {
             let value = JSON.parse(counterValue);
             setCounter(value);
         }
+        let rulesFromLocalStorage = localStorage.getItem('counterRules');
+        if(rulesFromLocalStorage){
+            setRules(JSON.parse(rulesFromLocalStorage));
+        }
     }, [])
 
     //set to localStorage
     useEffect(() => {
-        localStorage.setItem('counterValue', JSON.stringify(counter))
-    }, [counter]);
+        localStorage.setItem('counterValue', JSON.stringify(counter));
+        localStorage.setItem('counterRules',JSON.stringify(rules));
+    }, [counter,rules]);
 
     const incrementCounter = () => {
         setCounter((prev) => prev + 1);
     }
-    const resetCounter = () => {
-        setCounter(startRules.startValue);
+    const resetCounter = (start:number=startRules.startValue) => {
+        setCounter(start);
     }
     const setErrorHandler = (err: boolean) => {
         setError(err);
+    }
+    const setRulesCallback = (startValue:number, maxValue:number)=>{
+        setRules({startValue,maxValue});
+        resetCounter(startValue);
     }
     return (
         <div className="App">
             <div className="appWrapper">
                 <Counter counterRules={startRules}
-                         counterValue={counter}
-                         error={err}
-                         incrementCallback={incrementCounter}
-                         resetCallback={resetCounter}/>
+                                 counterValue={counter}
+                                 error={err}
+                                 incrementCallback={incrementCounter}
+                                 resetCallback={resetCounter}/>
                 <CounterSettings counterRules={startRules}
                                  error={err}
-                                 setErrorCallback={() => {
-                                 }}
-                                 setRulesCallback={() => {
-                                 }}/>
+                                 setErrorCallback={setErrorHandler}
+                                 setRulesCallback={setRulesCallback}/>
             </div>
 
         </div>
